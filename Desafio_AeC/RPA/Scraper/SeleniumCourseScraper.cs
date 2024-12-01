@@ -74,39 +74,68 @@ namespace RPA.Scraper
                             continue; // Pula para o próximo link se o curso já existe
                         }
 
-
-                        // Navega até o curso somente se ele não existir na base
-                        _driver.Navigate().GoToUrl(link);
-                        _wait.Until(driver => driver.FindElement(By.XPath("/html/body/section[1]/div/div[1]/h1")));
-
+                        // Variáveis para armazenar os dados do curso
                         string title = "Não Informado";
                         string professor = "Não Informado";
                         string duration = "Não Informado";
                         string description = "Não Informado";
 
-                        try { title = _driver.FindElement(By.XPath("/html/body/section[1]/div/div[1]/h1")).Text + " " + _driver.FindElement(By.XPath("/html/body/section[1]/div/div[1]/p[2]")).Text; }
-                        catch (NoSuchElementException) { }
+                        int maxRetries = 3; // Número máximo de tentativas
+                        int attempt = 0;    // Contador de tentativas
+                        bool success = false;
 
-                        try { professor = _driver.FindElement(By.XPath("//*[@id=\"section-icon\"]/div[1]/section/div/div/div/h3")).Text; }
-                        catch (NoSuchElementException) { }
+                        while (attempt < maxRetries && !success)
+                        {
+                            attempt++;
+                            try
+                            {
+                                // Navega até o curso somente se ele não existir na base
+                                _driver.Navigate().GoToUrl(link);
+                                _wait.Until(driver => driver.FindElement(By.XPath("/html/body/section[1]/div/div[1]/h1")));
 
-                        try { duration = _driver.FindElement(By.XPath("/html/body/section[1]/div/div[2]/div[1]/div/div[1]/div/p[1]")).Text; }
-                        catch (NoSuchElementException) { }
+                                // Extração de dados do curso
+                                try { title = _driver.FindElement(By.XPath("/html/body/section[1]/div/div[1]/h1")).Text + " " + _driver.FindElement(By.XPath("/html/body/section[1]/div/div[1]/p[2]")).Text; }
+                                catch (NoSuchElementException) { }
 
-                        try { description = _driver.FindElement(By.XPath("//*[@id=\"section-icon\"]/div[1]/div")).Text; }
-                        catch (NoSuchElementException) { }
+                                try { professor = _driver.FindElement(By.XPath("//*[@id=\"section-icon\"]/div[1]/section/div/div/div/h3")).Text; }
+                                catch (NoSuchElementException) { }
 
-                        var curso = new Curso(link, title, professor, duration, description);
+                                try { duration = _driver.FindElement(By.XPath("/html/body/section[1]/div/div[2]/div[1]/div/div[1]/div/p[1]")).Text; }
+                                catch (NoSuchElementException) { }
 
-                        courses.Add(curso);
-                        _logService.LogEvent("INFO", $"Adicionando curso [{title}] ", "SUCESSO", DateTime.Now);
-                        _courseRepository.Save(curso);
+                                try { description = _driver.FindElement(By.XPath("//*[@id=\"section-icon\"]/div[1]/div")).Text; }
+                                catch (NoSuchElementException) { }
+
+                                success = true; // Marca a tentativa como bem-sucedida
+                            }
+                            catch (WebDriverTimeoutException ex)
+                            {
+                                _logService.LogEvent("ERRO", $"Tentativa {attempt} falhou para o curso: {link}. Detalhes: {ex.Message}", "FALHA", DateTime.Now);
+
+                                if (attempt >= maxRetries)
+                                {
+                                    _logService.LogEvent("ERRO", $"Falha ao processar o curso após {maxRetries} tentativas. URL: {link}", "FALHA", DateTime.Now);
+                                    throw; // Repropaga a exceção para tratamento global, se necessário
+                                }
+                            }
+                        }
+
+                        // Armazena o curso somente se as informações foram obtidas com sucesso
+                        if (success)
+                        {
+                            var curso = new Curso(link, title, professor, duration, description);
+
+                            courses.Add(curso);
+                            _logService.LogEvent("INFO", $"Adicionando curso [{title}] ", "SUCESSO", DateTime.Now);
+                            _courseRepository.Save(curso);
+                        }
                     }
                     catch (Exception ex)
                     {
                         _logService.LogEvent("ERRO", $"Erro ao processar curso no link: {link}. Detalhes: {ex.Message}", "FALHA", DateTime.Now);
                     }
                 }
+
             }
             catch (Exception ex)
             {
