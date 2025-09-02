@@ -1,0 +1,3 @@
+C:\Users\dsd02\OneDrive\PROJETOS\Git\Desafio_AeC\Desafio_AeC\publish\Release\Desafio_AeC.pdb
+C:\Users\dsd02\OneDrive\PROJETOS\Git\Desafio_AeC\Desafio_AeC\publish\Release\selenium-manager.exe
+C:\Users\dsd02\OneDrive\PROJETOS\Git\Desafio_AeC\Desafio_AeC\publish\Release\Desafio_AeC.exe

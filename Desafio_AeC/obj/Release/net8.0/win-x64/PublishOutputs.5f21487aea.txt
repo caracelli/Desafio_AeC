@@ -1,0 +1,5 @@
+C:\PROJETOS\Git\Desafio_AeC\Desafio_AeC.pdb
+C:\PROJETOS\Git\Desafio_AeC\selenium-manager\linux\selenium-manager
+C:\PROJETOS\Git\Desafio_AeC\selenium-manager\macos\selenium-manager
+C:\PROJETOS\Git\Desafio_AeC\selenium-manager\windows\selenium-manager.exe
+C:\PROJETOS\Git\Desafio_AeC\Desafio_AeC.exe

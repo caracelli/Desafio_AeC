@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Desafio_AeC</id>
+    <version>1.0.0</version>
+    <authors>Desafio_AeC</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="047c3d959c366460310feb33d8a9356a5000b5cf" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="9.0.8" exclude="Build,Analyzers" />
+        <dependency id="Selenium.WebDriver" version="4.35.0" exclude="Build,Analyzers" />
+        <dependency id="System.Data.Odbc" version="9.0.8" exclude="Build,Analyzers" />
+        <dependency id="WebDriverManager" version="2.17.6" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\dsd02\OneDrive\PROJETOS\Git\Desafio_AeC\Desafio_AeC\bin\Debug\net8.0\Desafio_AeC.runtimeconfig.json" target="lib\net8.0\Desafio_AeC.runtimeconfig.json" />
+    <file src="C:\Users\dsd02\OneDrive\PROJETOS\Git\Desafio_AeC\Desafio_AeC\bin\Debug\net8.0\Desafio_AeC.dll" target="lib\net8.0\Desafio_AeC.dll" />
+  </files>
+</package>
